@@ -33,7 +33,6 @@ const App = () => {
         .then((response) => response.json())
         .then((data) => {
           if (data.cod !== "400") {
-            console.log(data);
             setTemperature(data.main.temp);
             setLocation(data.name);
             setWeather(data.weather[0].description);
@@ -49,14 +48,15 @@ const App = () => {
   }, []);
 
   return (
-    <View>
+    <View >
       {temperature && location && weather ? (
-        <>
+        <View >
           <Text
             style={{
               alignSelf: "center",
               marginTop: 130,
               fontSize: 40,
+              
             }}
           >
             {location}
@@ -75,7 +75,7 @@ const App = () => {
             {temperature}°
           </Text>
           <Forecast longitude={longitude} latitude={latitude} />
-        </>
+        </View>
       ) : (
         <Text>Loading temperature...</Text>
       )}
