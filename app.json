@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "WeatherX",
-    "slug": "WeatherX",
+    "slug": "weatherx",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -28,6 +28,12 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "88b39cc4-20e6-47b9-a736-a332c196971b"
+      }
+    },
+    "owner": "tonigali"
   }
 }

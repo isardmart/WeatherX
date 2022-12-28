@@ -8,8 +8,7 @@ const Search = () => {
   const [location, setLocation] = useState("Barcelona");
 
   const fetchWeather = async () => {
-    const API_KEY = "16909a97489bed275d13dbdea4e01f59";
-    const API_ENDPOINT = `https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=${API_KEY}`;
+    const API_ENDPOINT = `https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=16909a97489bed275d13dbdea4e01f59`;
     try {
       const response = await axios.get(API_ENDPOINT);
       setWeatherData(response.data);
@@ -28,7 +27,7 @@ const Search = () => {
   return (
     <View>
       <TextInput style={{
-          marginTop: 200,
+          marginTop: 50,
           padding: 10,
           borderWidth: 1,
           borderColor: '#ccc',
