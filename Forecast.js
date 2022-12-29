@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, Image, Button } from "react-native";
 
-const Forecast = ({ latitude, longitude }) => {
+
+const Forecast = ({ latitude, longitude,WEATHER_API_KEY }) => {
   const [forecast, setForecast] = useState(false);
   const [list, setList] = useState([]);
   const [isclicked, setIsclicked] = useState([false]);
@@ -106,7 +107,7 @@ const Forecast = ({ latitude, longitude }) => {
 
   useEffect(() => {
     fetch(
-      `https://api.openweathermap.org/data/2.5/forecast/daily?lat=${latitude}&lon=${longitude}&cnt=7&appid=16909a97489bed275d13dbdea4e01f59`
+      `https://api.openweathermap.org/data/2.5/forecast/daily?lat=${latitude}&lon=${longitude}&cnt=7&appid=${WEATHER_API_KEY}`
     )
       .then((response) => response.json())
       .then((data) => {

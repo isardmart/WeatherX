@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { View, Text, Button, Alert } from "react-native";
 import Search from "./Search";
 import SearchButton from "./SearchButton";
-import Display from "./Display";
 import * as Location from "expo-location";
 import Forecast from "./Forecast";
 

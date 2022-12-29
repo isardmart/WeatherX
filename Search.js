@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, TextInput, Button } from "react-native";
-import axios from "axios";
-import Display from "./Display";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 
 const Search = ({ setLatitude, setLongitude, setRender }) => {

@@ -2,9 +2,11 @@ import React, { useEffect, useState } from "react";
 import { View, Text, Button, Alert } from "react-native";
 import Search from "./Search";
 import SearchButton from "./SearchButton";
-import Display from "./Display";
 import * as Location from "expo-location";
 import Forecast from "./Forecast";
+import { GOOG_API_KEY, WEATHER_API_KEY } from '@env';
+
+
 
 const App = () => {
   const [clicked, setClicked] = useState(false);
@@ -33,7 +35,7 @@ const App = () => {
   };
   const fetchMain = async () => {
     await fetch(
-      `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&units=metric&appid=16909a97489bed275d13dbdea4e01f59`
+      `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&units=metric&appid=${WEATHER_API_KEY}`
     )
       .then((response) => response.json())
       .then((data) => {
@@ -69,7 +71,7 @@ const App = () => {
       >
         {temperature}°
       </Text>
-      <Forecast longitude={longitude} latitude={latitude} />
+      <Forecast WEATHER_API_KEY={WEATHER_API_KEY} longitude={longitude} latitude={latitude} />
     </View>)
   }
   useEffect(() => {
