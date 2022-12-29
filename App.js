@@ -13,73 +13,109 @@ const App = () => {
   const [weather, setWeather] = useState("");
   const [longitude, setLongitude] = useState("");
   const [latitude, setLatitude] = useState("");
+  const [render,setRender]=useState(true);
 
-  const askLocation=async()=>{
-
+  const askLocation = async () => {
     const { granted } = await Location.requestForegroundPermissionsAsync();
     console.log(granted);
     if (granted) {
       let position = await Location.getCurrentPositionAsync({
         enableHighAccuracy: true,
       });
-      if (position.coords){
-      const latitude=position.coords.latitude;
-      const longitude=position.coords.latitude;
-      setLatitude(latitude);
-      setLongitude(longitude);
-      fetch(
-        `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&units=metric&appid=16909a97489bed275d13dbdea4e01f59`
-      )
-        .then((response) => response.json())
-        .then((data) => {
-          if (data.cod !== "400") {
-            setTemperature(data.main.temp);
-            setLocation(data.name);
-            setWeather(data.weather[0].description);
-          }
-        });
-    }else{
-      Alert.alert('Please enable your phone location')
+      if (position.coords) {
+        setLatitude(position.coords.latitude);
+        setLongitude(position.coords.longitude);
+        setRender(false);
+      } else {
+        Alert.alert("Please enable your phone location");
+      }
     }
-  }
+  };
+  const fetchMain = async () => {
+    await fetch(
+      `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&units=metric&appid=16909a97489bed275d13dbdea4e01f59`
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.cod !== "400") {
+          console.log("main fetched");
+          setTemperature(data.main.temp);
+          setLocation(data.name);
+          setWeather(data.weather[0].description);
+        }
+      });
+  };
+  const renderMain=()=>{
+    return(<View>
+      <Text
+        style={{
+          alignSelf: "center",
+          marginTop: 180,
+          fontSize: 40,
+        }}
+      >
+        {location}
+      </Text>
+      <Text style={{ alignSelf: "center", fontSize: 20, marginTop: 10 }}>
+        {weather[0].toUpperCase() + weather.slice(1)}
+      </Text>
+      <Text
+        style={{
+          margin: 100,
+          marginTop: 20,
+          alignSelf: "center",
+          fontSize: 60,
+        }}
+      >
+        {temperature}°
+      </Text>
+      <Forecast longitude={longitude} latitude={latitude} />
+    </View>)
   }
   useEffect(() => {
     askLocation();
   }, []);
 
+  useEffect(() => {
+    fetchMain();
+    console.log('lets fetch main')
+  }, [render]);
+
   return (
-    <View >
-      {temperature && location && weather ? (
-        <View >
-          <Text
+    <View>
+      <View>
+        {clicked ? (
+          <View
             style={{
-              alignSelf: "center",
-              marginTop: 130,
-              fontSize: 40,
-              
+              top: 0,
+              width: "90%",
+              height: 80,
+              position: "absolute",
+              right: "5%",
+              zIndex: 20,
             }}
           >
-            {location}
-          </Text>
-          <Text style={{ alignSelf: "center", fontSize: 20, marginTop: 10 }}>
-            {weather[0].toUpperCase() + weather.slice(1)}
-          </Text>
-          <Text
+            <Search setLatitude={setLatitude} setLongitude={setLongitude} setRender={setRender} />
+          </View>
+        ) : (
+          <View
             style={{
-              margin: 100,
-              marginTop: 20,
-              alignSelf: "center",
-              fontSize: 60,
+              top: 50,
+              width: 80,
+              height: 80,
+              position: "absolute",
+              right: 20,
             }}
           >
-            {temperature}°
-          </Text>
-          <Forecast longitude={longitude} latitude={latitude} />
-        </View>
+            <SearchButton setClicked={setClicked} />
+          </View>
+        )}
+      </View>
+      {temperature && weather && location ? (
+        renderMain()
       ) : (
         <Text>Loading temperature...</Text>
       )}
-      {clicked ? <Search /> : <SearchButton setClicked={setClicked} />}
     </View>
   );
 };

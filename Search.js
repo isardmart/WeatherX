@@ -2,39 +2,52 @@ import React, { useState, useEffect } from "react";
 import { View, Text, TextInput, Button } from "react-native";
 import axios from "axios";
 import Display from "./Display";
+import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 
-const Search = () => {
-  const [weatherData, setWeatherData] = useState(null);
-  const [location, setLocation] = useState("Barcelona");
+const Search = ({ setLatitude, setLongitude, setRender }) => {
+  const [location, setLocation] = useState("");
 
-  const fetchWeather = async () => {
-    const API_ENDPOINT = `https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=16909a97489bed275d13dbdea4e01f59`;
-    try {
-      const response = await axios.get(API_ENDPOINT);
-      setWeatherData(response.data);
-    } catch (error) {
-      console.error(error.message);
-    }
-  };
-
-  const renderWeatherData = () => {
-    if (weatherData) {
-        return (<Display weatherData={weatherData} />)
-    }
-    return <Text>Enter a location to see the weather.</Text>;
+  const fetchLatLon = () => {
+    const API_ENDPOINT = `https://api.openweathermap.org/geo/1.0/direct?q=${location}&limit=5&appid=16909a97489bed275d13dbdea4e01f59`;
+    fetch(API_ENDPOINT)
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.cod !== "400") {
+            console.log("new fetched",data);
+            setLatitude(data[0].lat);
+            setLongitude(data[0].lon);
+            setRender(true);
+          }
+        });
   };
 
   return (
     <View>
-      <TextInput style={{
-          marginTop: 50,
-          padding: 10,
-          borderWidth: 1,
-          borderColor: '#ccc',
-          borderRadius: 5,
-        }}  placeholder="location" onChangeText={setLocation} />
-      <Button title="Get Weather" onPress={fetchWeather} />
-      {renderWeatherData()}
+      <View
+        style={{
+          height: 400,
+          position: "relative",
+          top: 40,
+          borderColor: "black",
+          borderRadius: 10,
+          borderWidth: 2,
+          zIndex: 20,
+          backgroundColor: "grey",
+          opacity: 0.9,
+        }}
+      >
+        <GooglePlacesAutocomplete
+          placeholder="Search"
+          onPress={(data, details = null) => {
+            setLocation(data.description);
+            fetchLatLon();
+          }}
+          query={{
+            key: "AIzaSyB5zTrtbU5i5CKHiK8HWGEPLtjB_ApPmCo",
+            language: "en",
+          }}
+        />
+      </View>
     </View>
   );
 };

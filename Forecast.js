@@ -9,7 +9,11 @@ const Forecast = ({ latitude, longitude }) => {
   const array = new Array(7).fill(false);
 
   const handlePress = (idx) => {
+    if (isclicked[idx]){
+      array[idx] = false;
+    } else{
     array[idx] = true;
+    }
     return setIsclicked(array);
   };
 
@@ -35,9 +39,19 @@ const Forecast = ({ latitude, longitude }) => {
     const maxtemp = value.temp.max - 273.15;
     const mintemp = value.temp.min - 273.15;
 
+    const humidity = value.humidity;
+
+    const pressure = value.pressure;
+
+    const windspeed = value.speed;
+
+    const rainprob = value.pop;
+
     return (
-      <View style={{alignItems:'center',height:40, justifyContent:'center'}}>
-         <View
+      <View
+        style={{ alignItems: "center", height: 40, justifyContent: "center",position:'relative' }}
+      >
+        <View
           style={{
             display: "flex",
             justifyContent: "space-between",
@@ -45,10 +59,7 @@ const Forecast = ({ latitude, longitude }) => {
             width: "100%",
             paddingStart: 10,
             paddingEnd: 10,
-            zIndex:0,
-            borderColor:'black',
-            borderWidth:2,
-            borderRadius:10,
+            zIndex: 0,
           }}
         >
           <Text style={{ width: 80 }}>{day}</Text>
@@ -65,17 +76,30 @@ const Forecast = ({ latitude, longitude }) => {
             {Math.round(mintemp)}
           </Text>
         </View>
-        <View style={{
-            height:50, opacity: 0.1, width: "100%",top:10, zIndex:1, position:'absolute' }}>
+        {isclicked[idx] ? (
+          <View style={{ display: "flex", flexDirection: "row", justifyContent:'space-around', marginBottom:10, }}>
+            <View style={{ display: "flex", flexDirection: "column" }}>
+              <Text>Humidity: {humidity}%</Text>
+              <Text>Rain probability: {rainprob}%   </Text>
+            </View>
+            <View style={{ display: "flex", flexDirection: "column" }}>
+              <Text>Wind speed: {windspeed}m/s</Text>
+              <Text>Pressure: {pressure}hPa </Text>
+            </View>
+          </View>
+        ) : null}
+        <View
+          style={{
+            height: 50,
+            opacity: 0,
+            width: "100%",
+            top: 10,
+            zIndex: 1,
+            position: "absolute",
+          }}
+        >
           <Button title="button" onPress={() => handlePress(idx)}></Button>
         </View>
-
-        {isclicked[idx] ? (
-            <View>
-              <Text>It is clicked!</Text>
-            </View>
-          ) : null}
-
       </View>
     );
   };
