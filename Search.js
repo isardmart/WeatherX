@@ -5,16 +5,18 @@ import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplet
 const Search = ({ setLatitude, setLongitude, setRender }) => {
   const [location, setLocation] = useState("");
 
+  useEffect(()=>{
+    fetchLatLon();
+  },[location])
+
   const fetchLatLon = () => {
     const API_ENDPOINT = `https://api.openweathermap.org/geo/1.0/direct?q=${location}&limit=5&appid=16909a97489bed275d13dbdea4e01f59`;
     fetch(API_ENDPOINT)
         .then((response) => response.json())
         .then((data) => {
           if (data.cod !== "400") {
-            console.log("new fetched",data);
             setLatitude(data[0].lat);
             setLongitude(data[0].lon);
-            setRender(true);
           }
         });
   };
@@ -38,7 +40,6 @@ const Search = ({ setLatitude, setLongitude, setRender }) => {
           placeholder="Search"
           onPress={(data, details = null) => {
             setLocation(data.description);
-            fetchLatLon();
           }}
           query={{
             key: "AIzaSyB5zTrtbU5i5CKHiK8HWGEPLtjB_ApPmCo",

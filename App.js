@@ -19,7 +19,6 @@ const App = () => {
 
   const askLocation = async () => {
     const { granted } = await Location.requestForegroundPermissionsAsync();
-    console.log(granted);
     if (granted) {
       let position = await Location.getCurrentPositionAsync({
         enableHighAccuracy: true,
@@ -40,7 +39,6 @@ const App = () => {
       .then((response) => response.json())
       .then((data) => {
         if (data.cod !== "400") {
-          console.log("main fetched");
           setTemperature(data.main.temp);
           setLocation(data.name);
           setWeather(data.weather[0].description);
@@ -71,7 +69,7 @@ const App = () => {
       >
         {temperature}°
       </Text>
-      <Forecast WEATHER_API_KEY={WEATHER_API_KEY} longitude={longitude} latitude={latitude} />
+      <Forecast render={render} WEATHER_API_KEY={WEATHER_API_KEY} longitude={longitude} latitude={latitude} />
     </View>)
   }
   useEffect(() => {
@@ -80,8 +78,10 @@ const App = () => {
 
   useEffect(() => {
     fetchMain();
-    console.log('lets fetch main')
   }, [render]);
+  useEffect(()=>{
+    setRender(!render);
+  },[latitude && longitude])
 
   return (
     <View>

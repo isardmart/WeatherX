@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { View, Text, Image, Button } from "react-native";
 
 
-const Forecast = ({ latitude, longitude,WEATHER_API_KEY }) => {
+const Forecast = ({render, latitude, longitude, WEATHER_API_KEY }) => {
   const [forecast, setForecast] = useState(false);
   const [list, setList] = useState([]);
   const [isclicked, setIsclicked] = useState([false]);
@@ -114,7 +114,7 @@ const Forecast = ({ latitude, longitude,WEATHER_API_KEY }) => {
         setList(data.list);
         setForecast(true);
       });
-  }, []);
+  }, [render]);
 
   return (
     <View>
