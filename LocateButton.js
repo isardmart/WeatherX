@@ -3,10 +3,10 @@ import React from 'react';
 
 
 
-const SearchButton = ({ setClicked }) => {
+const LocateButton = ({ reset, setReset }) => {
     const styles = {
         button: {
-          backgroundColor: "grey",
+          backgroundColor: "red",
           padding: 10,
           borderRadius: 10,
         },
@@ -18,10 +18,11 @@ const SearchButton = ({ setClicked }) => {
       };
   return (
     <Button
-      title="search"
-      style={styles.button}
+      title="Reset"
+      style={[styles.button]}
+      titleStyle={styles.buttonText}
       onPress={() => {
-        setClicked(true);
+        setReset(!reset);
       }}
     >
     </Button>
@@ -30,4 +31,4 @@ const SearchButton = ({ setClicked }) => {
 
 
 
-export default SearchButton;
+export default LocateButton;

@@ -4,9 +4,8 @@ import Search from "./Search";
 import SearchButton from "./SearchButton";
 import * as Location from "expo-location";
 import Forecast from "./Forecast";
-import { GOOG_API_KEY, WEATHER_API_KEY } from '@env';
-
-
+import { GOOG_API_KEY, WEATHER_API_KEY } from "@env";
+import LocateButton from "./LocateButton";
 
 const App = () => {
   const [clicked, setClicked] = useState(false);
@@ -15,7 +14,8 @@ const App = () => {
   const [weather, setWeather] = useState("");
   const [longitude, setLongitude] = useState("");
   const [latitude, setLatitude] = useState("");
-  const [render,setRender]=useState(true);
+  const [render, setRender] = useState(true);
+  const [reset,setReset]=useState(false);
 
   const askLocation = async () => {
     const { granted } = await Location.requestForegroundPermissionsAsync();
@@ -45,59 +45,35 @@ const App = () => {
         }
       });
   };
-  const renderMain=()=>{
-    return(<View>
-      <Text
-        style={{
-          alignSelf: "center",
-          marginTop: 180,
-          fontSize: 40,
-        }}
-      >
-        {location}
-      </Text>
-      <Text style={{ alignSelf: "center", fontSize: 20, marginTop: 10 }}>
-        {weather[0].toUpperCase() + weather.slice(1)}
-      </Text>
-      <Text
-        style={{
-          margin: 100,
-          marginTop: 20,
-          alignSelf: "center",
-          fontSize: 60,
-        }}
-      >
-        {temperature}°
-      </Text>
-      <Forecast render={render} WEATHER_API_KEY={WEATHER_API_KEY} longitude={longitude} latitude={latitude} />
-    </View>)
-  }
   useEffect(() => {
     askLocation();
-  }, []);
+  }, [reset]);
 
   useEffect(() => {
     fetchMain();
   }, [render]);
-  useEffect(()=>{
+  useEffect(() => {
     setRender(!render);
-  },[latitude && longitude])
+  }, [latitude && longitude]);
 
   return (
-    <View>
-      <View>
+    <View style={{display:'flex',flexDirection:'column',height:'100%'}}>
+      <View >
         {clicked ? (
           <View
             style={{
-              top: 0,
+              top: 20,
+              left:'5%',
               width: "90%",
-              height: 80,
               position: "absolute",
-              right: "5%",
-              zIndex: 20,
+              right: "0%",
             }}
           >
-            <Search setLatitude={setLatitude} setLongitude={setLongitude} setRender={setRender} />
+            <Search
+              setLatitude={setLatitude}
+              setLongitude={setLongitude}
+              setClicked={setClicked}
+            />
           </View>
         ) : (
           <View
@@ -113,11 +89,45 @@ const App = () => {
           </View>
         )}
       </View>
-      {temperature && weather && location ? (
-        renderMain()
-      ) : (
-        <Text>Loading temperature...</Text>
-      )}
+      <View style={{ position: "relative", display: "flex", top: 180 }}>
+        {temperature && weather && location ? (
+          <View >
+            <Text
+              style={{
+                alignSelf: "center",
+                fontSize: 40,
+              }}
+            >
+              {location}
+            </Text>
+            <Text style={{ alignSelf: "center", fontSize: 20, marginTop: 10 }}>
+              {weather[0].toUpperCase() + weather.slice(1)}
+            </Text>
+            <Text
+              style={{
+                margin: 100,
+                marginTop: 20,
+                alignSelf: "center",
+                fontSize: 60,
+              }}
+            >
+              {temperature}°
+            </Text>
+            <Forecast
+              render={render}
+              WEATHER_API_KEY={WEATHER_API_KEY}
+              longitude={longitude}
+              latitude={latitude}
+            />
+          </View>
+        ) : (
+          <Text>Loading temperature...</Text>
+        )}
+        
+      </View>
+      <View style={{position:'absolute', bottom:0, width:'100%'}}>
+          <LocateButton reset={reset} setReset={setReset}/>
+      </View>
     </View>
   );
 };
